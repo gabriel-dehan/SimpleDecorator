@@ -1,7 +1,7 @@
-SimpleDecorator
+[SimpleDecorator](https://rubygems.org/gems/simple-decorator)
 ===============
 ```
-simpledecorator -v
+simple-decorator -v
 # => 0.2.0
 ```
 
@@ -74,6 +74,9 @@ SimpleDecorator decorators are true decorators :
     decorator == user
     # => true
   ```
+
+# Installation
+`gem install simple-decorator`
 
 # Usage
 To create a decorator, simply inherit from SimpleDecorator.
