@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    simple_decorator (0.1.0)
+    simple-decorator (0.1.2)
 
 GEM
   remote: http://rubygems.org/
@@ -21,4 +21,4 @@ PLATFORMS
 
 DEPENDENCIES
   rspec
-  simple_decorator!
+  simple-decorator!
