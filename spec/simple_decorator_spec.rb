@@ -23,8 +23,9 @@ describe SimpleDecorator do
         SimpleDecorator.new(@user).should_not raise_error(ArgumentError)
       end
 
-      it 'should be fully transparent' do
-        @decorator.should be_an_instance_of(@user.class)
+      describe 'should be fully transparent' do
+        it { @decorator.should be_an_instance_of(@user.class) }
+        it { @decorator.should == @user }
       end
     end # Object behavior
 
