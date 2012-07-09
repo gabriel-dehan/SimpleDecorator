@@ -3,52 +3,46 @@ require 'spec_helper'
 describe SimpleDecorator do
   before do
     # User mock object
-    @user_mock = double('user')
-    @user_mock.stub('first_name') { 'Foo' }
-    @user_mock.stub('last_name') { 'Bar' }
-    @user_mock.stub('count') { 1 }
+    @user = mock('user')
+    @user.stub('first_name') { 'Foo' }
+    @user.stub('last_name') { 'Bar' }
+    @user.stub('count') { 1 }
 
-    # Interface mock object
-    @interface_mock = double('simple_decorator')
-    @interface_mock.stub('first_name') { 'Geronimo' }
-    @interface_mock.stub('count') { @component.count + 1 }
+    # Interface
+    @decorator = SimpleDecorator.new(@user)
+    def @decorator.first_name; 'Geronimo' end
+    def @decorator.count; @component.count + 1 end
 
-    # An other interface mock object
-    @other_interface_mock = double('simple_decorator')
-    @other_interface_mock.stub('count') { @component.count + 1 }
+    # An other decorator
+    @other_decorator = SimpleDecorator.new(@decorator)
+    def @other_decorator.count; @component.count + 2 end
   end
   describe "is a true decorator" do
-    before do
-      @user      = @user_mock.new
-      @interface = @interface_mock.new(@user)
-    end
-    it 'should take an object as an argument for instanciation' do
-      @interface_mock.new(@user)
+    describe 'Object behavior' do
+      it 'should take an object as an argument for instanciation' do
+        SimpleDecorator.new(@user).should_not raise_error(ArgumentError)
+      end
 
-      @interface.should be_an_instance_of(@user)
-    end
+      it 'should be fully transparent' do
+        @decorator.should be_an_instance_of(@user.class)
+      end
+    end # Object behavior
 
-    it 'should be fully transparent' do
-      @interface.should_receive(:new).with(@user).and_return(@user)
-      @interface_mock.new(@user)
-    end
+    describe 'Delegation behavior' do
+      it 'should receive any known method an not pass them to the component' do
+        @decorator.first_name.should == 'Geronimo'
+        @decorator.first_name.should_not == 'Foo'
+      end
 
-    it 'should receive any known method an not pass them to the component' do
-      @interface.first_name.should == 'Geronimo'
-    end
+      it 'should delegate unknown methods to the underlying component' do
+        @decorator.last_name.should == 'Bar'
+      end
 
-    it 'should delegate unknown methods to the underlying component' do
-      @interface_mock.should_receive(:last_name)
-      @interface.should_receive(:last_name).and_return('Bar')
-    end
-
-    it 'should be able to decorate a decorator' do
-      decorator = @other_interface_mock.new(@interface)
-
-      @user.count.should      == 1
-      @interface.count.should == 2
-      decorator.count.should  == 3
-    end
+      it 'should be able to decorate a decorator' do
+        @user.count.should      == 1
+        @decorator.count.should == 2
+        @other_decorator.count.should  == 4
+      end
+    end # Delegation behavior
   end # is a true decorator
-
 end
