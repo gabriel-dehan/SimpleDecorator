@@ -1,4 +1,4 @@
-SimpleDecorator
+SimpleDecorator -v # => 0.2.0
 ===============
 
 SimpleDecorator allows you to quickly implement Decorators in your application.
